@@ -1,0 +1,7 @@
+{
+    "whitelistmode": true,
+    "list":[
+        "http://exmaple1.com",
+        "http://exmaple2.com"
+    ]
+}
