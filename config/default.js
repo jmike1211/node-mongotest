@@ -10,6 +10,6 @@ module.exports = {
 //  port:3200,
   session: {
   },
-  mongodb: 'mongodb://localhost:27017/myblog',
+  mongodb: 'mongodb+srv://mosong:password@cluster0-bzfq7.gcp.mongodb.net/test?retryWrites=true&w=majority',
   nodeip:"127.0.0.1"
 };

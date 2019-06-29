@@ -2,7 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 
 var version = require('../config/version');
-var crypto = require('../../../homework/firstclass');
+//var crypto = require('../../../homework/firstclass');
 
 var selVer = version(process.argv[3])
 
@@ -117,7 +117,7 @@ module.exports = {
                     if(err) throw err;
                     console.log(items[0]["password"]);
         			
-					var crypt = crypto.hmacSHA512(plaintext,items[0]["password"])    
+					//var crypt = crypto.hmacSHA512(plaintext,items[0]["password"])    
         			console.log("crypt:"+crypt) 
                     res.send(items)
                 })
