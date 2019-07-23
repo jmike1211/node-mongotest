@@ -19,7 +19,7 @@ module.exports = {
     		var myDB = db.db(selVer["dbname"])
     		myDB.collection(selVer["dbcollection"],function(err,collection){
 				console.log("mongodb insert!")
-				collection.insertOne(jsondata)
+				collection.insertOne(jsondata) 
 				if (err) throw err;
 				res.send(jsondata)
 			})
@@ -29,6 +29,7 @@ module.exports = {
 
 	readaccount: function readaccount(req,res,next){
 		var jsondata = req.body
+		console.log("body:::",req.body)
 		if(req.body._id != undefined){
 			jsondata["_id"] =new ObjectId(jsondata["_id"])
 		}
@@ -61,7 +62,7 @@ module.exports = {
    				console.log(jsondata["type"])
 				//第一個參數是要更新的條件，第二個參數$set:更新的欄位及內容.
    				//第三個參數writeConcern，第四個參數執行update後的callback函式
-                collection.updateOne({"_id":jsondata["_id"]},updatedata,{w:1}, function(err,result){
+                collection.update(jsondata,{ upsert : true }, function(err,result){
                     console.log("mongodb update!")
                     if(err) throw err;
                     console.log(result);
