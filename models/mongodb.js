@@ -27,6 +27,26 @@ module.exports = {
 		})
 	},
 
+    mcreateaccount: function mcreateaccount(req,res,next){
+        var jsondata = req.body
+        var dateTime = Date.now();
+        var timestamp = Math.floor(dateTime / 1000);
+        console.log(timestamp)
+        jsondata["timestamp"] = timestamp
+        console.log(jsondata)
+        MongoClient.connect(selVer["mongodb"],{useNewUrlParser : true},function(err, db){
+            console.log('mongodb is running!');
+            var myDB = db.db(selVer["dbname"])
+            myDB.collection(selVer["dbcollection"],function(err,collection){
+                console.log("mongodb insert!")
+                collection.insertMany(jsondata)
+                if (err) throw err;
+                res.send(jsondata)
+            })
+            db.close(); //關閉連線
+        })
+    },
+
 	readaccount: function readaccount(req,res,next){
 		var jsondata = req.body
 		console.log("body:::",req.body)
@@ -47,6 +67,34 @@ module.exports = {
 			db.close(); //關閉連線
         })	
 	},
+
+    freadaccount: function freadaccount(req,res,next){
+        var jsondata = req.body
+        console.log("body:::",req.body)
+        var jarray = []
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        for (var key in jsondata){
+            var temp = {} 
+            jsondata[key] = {$regex: new RegExp(jsondata[key])}
+            temp[key] = jsondata[key]
+            jarray.push(temp)
+        }
+        MongoClient.connect(selVer["mongodb"],{useNewUrlParser : true},function(err, db){
+            console.log('mongodb is running!');
+            var myDB = db.db(selVer["dbname"])
+            myDB.collection(selVer["dbcollection"],function(err,collection){
+                collection.find({$or :jarray}).limit(10).toArray(function(err,items){
+                    console.log("mongodb read!")
+                    if(err) throw err;
+                    console.log(items);
+                    res.send(items)
+                })
+            })
+            db.close(); //關閉連線
+        })
+    },
 
     updateaccount: function updateaccount(req,res,next){
         var jsondata = req.body

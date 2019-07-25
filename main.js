@@ -15,7 +15,7 @@ middle_error(app);
 
 var selVer = version(process.argv[3])
 app.set('port', selVer["port"]);
-
+console.log(selVer["dbcollection"])
 var numCPUs = process.argv[2] || 2//require('os').cpus().length;
 
 if (cluster.isMaster) {
