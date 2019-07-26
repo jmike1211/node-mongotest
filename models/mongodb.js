@@ -7,6 +7,75 @@ var version = require('../config/version');
 var selVer = version(process.argv[3])
 
 module.exports = {
+    TopAccount: function TopAccount(req, res, next){
+        req.app.locals.collection.find({}).limit(5).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+    },
+    
+    createaccount: function createaccount(req,res,next){
+        var jsondata = req.body
+        console.log(jsondata)
+        req.app.locals.collection.insertOne(jsondata).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },
+
+    mcreateaccount: function mcreateaccount(req,res,next){
+        var jsondata = req.body
+        console.log(jsondata)
+        req.app.locals.collection.insertMany(jsondata).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+    },
+
+    readaccount: function readaccount(req,res,next){
+        var jsondata = req.body
+        console.log("body:::",req.body)
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+
+        req.app.locals.collection.find(jsondata).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+    },
+
+    freadaccount: function freadaccount(req,res,next){
+        var jsondata = req.body
+        console.log("body:::",req.body)
+        var jarray = []
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        for (var key in jsondata){
+            var temp = {} 
+            jsondata[key] = {$regex: new RegExp(jsondata[key])}
+            temp[key] = jsondata[key]
+            jarray.push(temp)
+        }
+
+        req.app.locals.collection.find({$or :jarray}).limit(10).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },
+
+    updateaccount: function updateaccount(req,res,next){
+        var jsondata = req.body
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        var updatedata = {$set:jsondata}
+        console.log(updatedata)
+        //第一個參數是要更新的條件，第二個參數$set:更新的欄位及內容.
+        //第三個參數writeConcern，第四個參數執行update後的callback函式
+
+        req.app.locals.collection.update(updatedata).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },
+
+    deleteaccount: function deleteaccount(req,res,next){
+        var jsondata = req.body
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+
+        req.app.locals.collection.remove(jsondata, {w:1}).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+    },
+
+    /*
 	createaccount: function createaccount(req,res,next){
         var jsondata = req.body
         var dateTime = Date.now();
@@ -28,6 +97,7 @@ module.exports = {
 	},
 
     mcreateaccount: function mcreateaccount(req,res,next){
+        jsondata["status"] = false
         var jsondata = req.body
         var dateTime = Date.now();
         var timestamp = Math.floor(dateTime / 1000);
@@ -139,42 +209,6 @@ module.exports = {
             })
             db.close(); //關閉連線
         })              
-    },
-
-	register: function register(){
-		
-	},
-	
-	activate: function activate(req,res,next){
-		var useremail = req.body.email
-		//var userPword = req.body.password
-		var usertime = req.body.timestamp
-		var plaintext = useremail+usertime
-
-		console.log("plaintext:"+plaintext)
-		var jsondata ={}
-		jsondata["email"] = req.body.email
-		//jsondata["timestamp"] = req.body.timestamp
-		console.log(jsondata)
-
-        MongoClient.connect(selVer["mongodb"],{useNewUrlParser : true},function(err, db){
-            console.log('mongodb is running!');
-            var myDB = db.db(selVer["dbname"])
-            myDB.collection(selVer["dbcollection"],function(err,collection){
-                collection.find(jsondata).toArray(function(err,items){
-                    console.log("mongodb read!")
-                    if(err) throw err;
-                    console.log(items[0]["password"]);
-        			
-					//var crypt = crypto.hmacSHA512(plaintext,items[0]["password"])    
-        			console.log("crypt:"+crypt) 
-                    res.send(items)
-                })
-            })
-            db.close(); //關閉連線
-        })
-		//var crypt = crypto.hmacSHA512(plaintext,userPword)	
-		//console.log("crypt:"+crypt)		
-	}
+    },*/
 }
 
