@@ -2,6 +2,7 @@ var express = require('express');
 var config = require('./config/default');
 var routes = require('./routes');
 var cluster = require('cluster');
+
 var middle_error = require('./middle/error');
 var middle_normal = require('./middle/normal');
 var middle_verify = require('./middle/verify');
@@ -18,6 +19,7 @@ middle_error(app);
 var selVer = version(process.argv[3])
 app.set('port', selVer["port"]);
 console.log(selVer["dbcollection"])
+
 var numCPUs = process.argv[2] || 2//require('os').cpus().length;
 
 MongoClient.connect(selVer["mongodb"], { useNewUrlParser: true,poolSize: 10 })
