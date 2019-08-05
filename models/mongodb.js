@@ -72,11 +72,28 @@ module.exports = {
             jsondata["_id"] =new ObjectId(jsondata["_id"])
         }
         var updatedata = {$set:jsondata}
+        //var updatedata = jsondata
         console.log(updatedata)
         //第一個參數是要更新的條件，第二個參數$set:更新的欄位及內容.
         //第三個參數writeConcern，第四個參數執行update後的callback函式
 
-        req.app.locals.collection.update(updatedata).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+        req.app.locals.collection.updateOne(jsondata,updatedata,{upsert: true, safe: false}).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },
+
+
+    mupsertaccount: function mupsertaccount(req,res,next){
+        var jsondata = req.body
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        var updatedata = {$set:jsondata}
+        //var updatedata = jsondata
+        console.log(updatedata)
+        //第一個參數是要更新的條件，第二個參數$set:更新的欄位及內容.
+        //第三個參數writeConcern，第四個參數執行update後的callback函式
+
+        req.app.locals.collection.updateMany(jsondata,updatedata,{upsert: true, safe: false}).then(response => {res.status(200).json(response)}).catch(error => console.error(error));
 
     },
 

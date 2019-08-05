@@ -27,6 +27,7 @@ router.post('/account/fizzyread',mongo.freadaccount)
 router.post('/account/TopAccount',mongo.TopAccount)
 
 router.post('/account/upsert',mongo.upsertaccount)
+router.post('/account/multiupsert',mongo.mupsertaccount)
 //router.post('/account/register',mongo.register)
 //router.post('/account/activate',mongo.activate)
 //router.post('verify',verify.verify)
