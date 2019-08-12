@@ -35,8 +35,17 @@ module.exports = {
     },
 
     freadaccount: function freadaccount(req,res,next){
-        var jsondata = req.body
-        console.log("body:::",req.body)
+        //var jsondata = req.body
+        //console.log("body:::",req.body)
+        if (req.query.searchword != undefined){
+            var jsondata = JSON.parse(req.query.searchword)
+            console.log("body:::",jsondata)
+        }
+	else{
+            var jsondata = req.body
+            console.log("body:::",req.body)
+	}
+	console.log("params:::",req.params.aaaaa)
         var jarray = []
         if(req.body._id != undefined){
             jsondata["_id"] =new ObjectId(jsondata["_id"])
@@ -51,6 +60,26 @@ module.exports = {
         req.app.locals.collection.find({$or :jarray}).limit(10).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
 
     },
+
+    /*freadaccount1: function freadaccount1(req,res,next){
+        console.log("body:::",req.body)
+        if (req.params.searchword != undefined){
+            var jsondata = JSON.parse(req.params.searchword)
+        }
+        var jarray = []
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        for (var key in jsondata){
+            var temp = {}
+            jsondata[key] = {$regex: new RegExp(jsondata[key])}
+            temp[key] = jsondata[key]
+            jarray.push(temp)
+        }
+
+        req.app.locals.collection.find({$or :jarray}).limit(10).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },*/
 
     updateaccount: function updateaccount(req,res,next){
         var jsondata = req.body

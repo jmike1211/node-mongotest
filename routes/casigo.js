@@ -24,6 +24,7 @@ router.post('/account/delete',mongo.deleteaccount)
 
 router.post('/account/multicreate',mongo.mcreateaccount)
 router.post('/account/fizzyread',mongo.freadaccount)
+router.get('/account/fizzyread/',mongo.freadaccount)
 router.post('/account/TopAccount',mongo.TopAccount)
 
 router.post('/account/upsert',mongo.upsertaccount)
