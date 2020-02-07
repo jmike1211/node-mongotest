@@ -54,8 +54,39 @@ module.exports = {
             var temp = {} 
             jsondata[key] = {$regex: new RegExp(jsondata[key])}
             temp[key] = jsondata[key]
+            console.log(temp)
             jarray.push(temp)
         }
+	console.log(jarray)
+        req.app.locals.collection.find({$or :jarray}).limit(10).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
+
+    },
+
+    ftfidfreadaccount : function ftfidfreadaccount(req,res,next){
+        if (req.query.searchword != undefined){
+            var jsondata = JSON.parse(req.query.searchword)
+            console.log("body:::",jsondata)
+        }
+        else{
+            var jsondata = req.body
+            console.log("body:::",req.body)
+        }
+        var jarray = []
+        if(req.body._id != undefined){
+            jsondata["_id"] =new ObjectId(jsondata["_id"])
+        }
+        var keys = Object.keys(jsondata);
+        var arraydata = jsondata[keys]
+        console.log("nodearray:::"+arraydata)
+
+        for (var i = 0; i < arraydata.length; i++) {
+            console.log(arraydata[i]);
+            var temp = {}
+            temp[keys] = {$regex: new RegExp(arraydata[i])}
+            console.log(temp)
+            jarray.push(temp)
+        }
+        console.log(jarray)
 
         req.app.locals.collection.find({$or :jarray}).limit(10).toArray().then(response => {res.status(200).json(response)}).catch(error => console.error(error));
 
